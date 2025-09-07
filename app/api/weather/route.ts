@@ -7,6 +7,7 @@ export async function GET(req: NextRequest) {
   var data: string | null | number = req.nextUrl.searchParams.get("data");
   var longitude;
   var latitude;
+  //   Request long and lat from openweatherapi
   try {
     const response = await axios.get(
       `http://api.openweathermap.org/geo/1.0/direct?q=${data}&limit=${1}&appid=${apiKey}`
@@ -18,7 +19,8 @@ export async function GET(req: NextRequest) {
       console.log(err);
     }
   }
-  try {
+  //   Convert long and lat from location data to weather data, kinda redundant but whatever
+    try {
     const weather = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=imperial`);
     return NextResponse.json(weather.data);
   } catch (err) {
