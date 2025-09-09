@@ -1,28 +1,20 @@
 "use client";
+import React from "react";
 import axios from "axios";
-import React, { useState } from "react";
 
-export default function WeatherSearchCard() {
-  const [userData, setUserData] = useState("");
+type WeatherSearchCardProps = {
+  setUserData: (data: object) => void;
+}
 
+export default function WeatherSearchCard({ setUserData }: WeatherSearchCardProps) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
     const data = formData.get("data");
-    if (typeof data === "string") {
-      setUserData(data);
-    } else {
-      setUserData("");
-    }
-
-    console.log(userData);
-    // Prob need to move later
     try {
-      const weatherData = await axios.get(`/api/weather/?data=${userData}`);
-      if (typeof data === "string") {
-        return weatherData.data;
-      }
+      const weatherData = await axios.get(`/api/weather/?data=${data}`);
+      setUserData(weatherData.data);
     } catch (err) {
       if (err) {
         console.log(err);
@@ -31,7 +23,7 @@ export default function WeatherSearchCard() {
   };
 
   return (
-    <div className="flex items-center justify-center bg-neutral-100 w-90 p-2 max-w-lg rounded shadow-md">
+    <div className="flex items-center justify-center bg-neutral-100 w-90 p-2 max-w-lg rounded shadow-md fade-in ">
       <form
         onSubmit={handleSubmit}
         className="flex items-center border-2 border-gray-300 rounded w-80 p-2 bg-white "
@@ -39,7 +31,7 @@ export default function WeatherSearchCard() {
         <input
           type="text"
           name="data"
-          placeholder="City, ZipCode or State"
+          placeholder="City or Zipcode"
           className="text-black text-lg focus:outline-none flex-1 bg-transparent "
         ></input>
         <button type="submit" className="ml-2 ">
