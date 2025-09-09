@@ -5,14 +5,29 @@ import WeatherSearchResultsDashboard from "./components/WeatherResultsDashboard"
 
 export default function Home() {
   const [userData, setUserData] = useState<object>({});
-  return (
-    <>
-      <div className="flex items-center justify-center h-screen  bg-gradient-to-t from-indigo-700 via-indigo-300 to-indigo-700">
-        <WeatherSearchCard setUserData={setUserData} />
-      </div>
-      <div>
-        <WeatherSearchResultsDashboard userData={userData} />
-      </div>
-    </>
-  );
+  const [isDataCollected, setIsDataCollected] = useState<Boolean>(false);
+  if (!isDataCollected) {
+    return (
+      <>
+        <div>
+          <div className="flex items-center justify-center h-screen bg-gradient-to-t from-sky-500 via-sky-700 to-sky-800 ">
+            <WeatherSearchCard
+              setUserData={setUserData}
+              setIsDataCollected={setIsDataCollected}
+            />
+          </div>
+        </div>
+      </>
+    );
+  } else if (isDataCollected) {
+    return (
+      <>
+        <div>
+          <div className="flex items-center justify-center h-screen bg-gradient-to-t from-sky-500 via-sky-700 to-sky-800">
+            <WeatherSearchResultsDashboard userData={userData} />
+          </div>
+        </div>
+      </>
+    );
+  }
 }

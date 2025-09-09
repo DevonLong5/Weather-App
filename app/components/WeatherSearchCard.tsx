@@ -4,11 +4,16 @@ import axios from "axios";
 
 type WeatherSearchCardProps = {
   setUserData: (data: object) => void;
-}
+  setIsDataCollected: (data: boolean) => void;
+};
 
-export default function WeatherSearchCard({ setUserData }: WeatherSearchCardProps) {
+export default function WeatherSearchCard({
+  setUserData,
+  setIsDataCollected,
+}: WeatherSearchCardProps) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsDataCollected(true);
     const form = event.currentTarget;
     const formData = new FormData(form);
     const data = formData.get("data");
@@ -23,21 +28,23 @@ export default function WeatherSearchCard({ setUserData }: WeatherSearchCardProp
   };
 
   return (
-    <div className="flex items-center justify-center bg-neutral-100 w-90 p-2 max-w-lg rounded shadow-md fade-in ">
-      <form
-        onSubmit={handleSubmit}
-        className="flex items-center border-2 border-gray-300 rounded w-80 p-2 bg-white "
-      >
-        <input
-          type="text"
-          name="data"
-          placeholder="City or Zipcode"
-          className="text-black text-lg focus:outline-none flex-1 bg-transparent "
-        ></input>
-        <button type="submit" className="ml-2 ">
-          <img src="/images/search.svg" alt="search" className="w-6 h-6 " />
-        </button>
-      </form>
+    <div>
+      <div className="flex items-center justify-center bg-gradient-to-t from-indigo-700 via-indigo-300 to-indigo-700 w-90 p-2 max-w-lg rounded shadow-md fade-in">
+        <form
+          onSubmit={handleSubmit}
+          className="flex items-center border-2 border-gray-300 rounded w-80 p-2 bg-white "
+        >
+          <input
+            type="text"
+            name="data"
+            placeholder="City or Zipcode"
+            className="text-black text-lg focus:outline-none flex-1 bg-transparent "
+          ></input>
+          <button type="submit" className="ml-2 ">
+            <img src="/images/search.svg" alt="search" className="w-6 h-6 " />
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
