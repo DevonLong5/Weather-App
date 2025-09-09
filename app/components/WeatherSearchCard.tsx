@@ -10,12 +10,18 @@ export default function WeatherSearchCard() {
     const form = event.currentTarget;
     const formData = new FormData(form);
     const data = formData.get("data");
+    if (typeof data === "string") {
+      setUserData(data);
+    } else {
+      setUserData("");
+    }
+
+    console.log(userData);
+    // Prob need to move later
     try {
-      const weatherData = await axios.get(`/api/weather/?city=${data}`);
-      console.log(weatherData.data);
+      const weatherData = await axios.get(`/api/weather/?data=${userData}`);
       if (typeof data === "string") {
-        setUserData(weatherData.data);
-        console.log(userData);
+        return weatherData.data;
       }
     } catch (err) {
       if (err) {
@@ -23,6 +29,7 @@ export default function WeatherSearchCard() {
       }
     }
   };
+
   return (
     <div className="flex items-center justify-center bg-neutral-100 w-90 p-2 max-w-lg rounded shadow-md">
       <form
