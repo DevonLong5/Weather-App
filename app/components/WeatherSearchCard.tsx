@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import axios from "axios";
-import { WeatherData } from "@/.next/types/weather";
+import type { WeatherData } from "@/.next/types/weather";
 
 type WeatherSearchCardProps = {
   setRequestedWeatherData: (data: WeatherData) => void;

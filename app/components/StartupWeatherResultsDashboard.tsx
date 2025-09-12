@@ -1,8 +1,8 @@
 "use client";
-import { WeatherData } from "@/.next/types/weather";
+import type { WeatherData } from "@/.next/types/weather";
 import axios from "axios";
 import { useEffect } from "react";
-import { WeatherIconsObject } from "@/.next/types/weather";
+import type { WeatherIconsObject } from "@/.next/types/weather";
 import Skycons from "react-skycons";
 
 interface StartupWeatherDashboardProps {

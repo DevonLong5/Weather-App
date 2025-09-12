@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { WeatherData } from "@/.next/types/weather";
+import type { WeatherData } from "@/.next/types/weather";
 import { weatherIcons } from "./api/lib/constants";
 import WeatherSearchCard from "./components/WeatherSearchCard";
 import WeatherSearchResultsDashboard from "./components/WeatherResultsDashboard";
