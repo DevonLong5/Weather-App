@@ -19,6 +19,11 @@ export async function GET(req: NextRequest) {
       icon: "string",
       description: "string",
     },
+    wind: {
+      speed: 0,
+      deg: 0,
+      gust: 0,
+    },
   };
 
   if (!data) {
@@ -79,7 +84,7 @@ export async function GET(req: NextRequest) {
       );
     }
   }
-    try {
+  try {
     const weather = await axios.get(
       `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=imperial`
     );
@@ -87,6 +92,9 @@ export async function GET(req: NextRequest) {
     WeatherData.main.feels_like = weather.data.main.feels_like;
     WeatherData.weather.icon = weather.data.weather[0].icon;
     WeatherData.weather.description = weather.data.weather[0].description;
+    WeatherData.wind.deg = weather.data.wind.deg;
+    WeatherData.wind.speed = weather.data.wind.speed;
+    WeatherData.wind.gust = weather.data.wind.gust;
     return NextResponse.json(WeatherData);
   } catch (err) {
     if (err) {

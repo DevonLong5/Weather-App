@@ -18,6 +18,11 @@ export async function GET(req: NextRequest) {
       icon: "string",
       description: "string",
     },
+    wind: {
+      deg: 0,
+      gust: 0,
+      speed:0,
+    }
   };
 
   if (!longitude || !latitude) {
@@ -52,6 +57,9 @@ export async function GET(req: NextRequest) {
     WeatherData.main.feels_like = weather.data.main.feels_like;
     WeatherData.weather.icon = weather.data.weather[0].icon;
     WeatherData.weather.description = weather.data.weather[0].description;
+    WeatherData.wind.deg = weather.data.wind.deg;
+    WeatherData.wind.speed = weather.data.wind.speed;
+    WeatherData.wind.gust = weather.data.wind.gust;
     return NextResponse.json(WeatherData);
   } catch (err) {
     if (err) {

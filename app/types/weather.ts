@@ -10,6 +10,11 @@ export type WeatherData = {
     icon: string;
     description: string;
   };
+  wind: {
+    speed: number;
+    gust: number;
+    deg: number;
+  }
 };
 
 export interface WeatherIconsObject {
