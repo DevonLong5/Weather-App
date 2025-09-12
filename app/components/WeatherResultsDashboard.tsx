@@ -1,5 +1,5 @@
 "use client";
-import type { WeatherData, WeatherIconsObject } from "@/.next/types/weather";
+import type { WeatherData, WeatherIconsObject } from "../types/weather";
 import Skycons from "react-skycons";
 
 interface WeatherSearchResultsDashboardProps {

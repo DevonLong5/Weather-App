@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
-import type { WeatherData } from "@/.next/types/weather";
+import type { WeatherData } from "@/app/types/weather";
 
 export async function GET(req: NextRequest) {
   const apiKey = process.env.API_KEY;
