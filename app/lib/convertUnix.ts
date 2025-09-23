@@ -7,6 +7,7 @@ export function convertUnix(unixTimestamp: number) {
     : hours > 12
     ? (formattedTime = hours - 12 + "pm")
     : (formattedTime = hours + "am");
+  hours == 12 ? (formattedTime = hours + "pm") : null;
   return formattedTime;
 }
 

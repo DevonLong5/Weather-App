@@ -3,6 +3,7 @@ import axios from "axios";
 import type { WeatherData, WeatherDataAPIRequest } from "@/app/types/weather";
 import { convertUnix, convertUnixToDayOfWeek } from "@/app/lib/convertUnix";
 
+
 export async function GET(req: NextRequest) {
   const apiKey = process.env.API_KEY;
   let longitude: string | null = req.nextUrl.searchParams.get("lon");

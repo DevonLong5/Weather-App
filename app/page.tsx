@@ -5,7 +5,6 @@ import { weatherIcons } from "./lib/constants";
 import WeatherSearchResultsDashboard from "./components/WeatherResultsDashboard";
 import StartupWeatherDashboard from "./components/StartupWeatherResultsDashboard";
 import Loading from "./loading";
-import WeatherSearchCard from "./components/WeatherSearchCard";
 
 export default function Home() {
   const [requestedWeatherData, setRequestedWeatherData] =
@@ -15,6 +14,8 @@ export default function Home() {
   const [userLocationWeatherData, setUserLocationWeatherData] =
     useState<WeatherData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isSuggestionLoading, setIsSuggestionLoading] =
+    useState<boolean>(false);
   useEffect(() => {
     if (userLocationWeatherData === null) {
       navigator.geolocation.getCurrentPosition(async (position) => {
@@ -34,39 +35,33 @@ export default function Home() {
 
   return (
     <>
-      <div className="h-screen bg-gradient-to-br from-blue-500 to-indigo-700">
-        <div className="p-2">
-          <WeatherSearchCard
-            setRequestedWeatherData={setRequestedWeatherData}
-            setIsRequestedDataCollected={setIsRequestedDataCollected}
-            userLocationWeatherData={userLocationWeatherData}
-            setIsLoading={setIsLoading}
-            isLoading={isLoading}
-          />
-        </div>
+      {isLoading && <Loading />}
 
-        {isLoading && <Loading />}
+      {!isRequestedDataCollected && userLocationWeatherData && !isLoading && (
+        <StartupWeatherDashboard
+          userLocationWeatherData={userLocationWeatherData}
+          weatherIcons={weatherIcons}
+          setIsSuggestionLoading={setIsSuggestionLoading}
+          isSuggestionLoading={isSuggestionLoading}
+          setRequestedWeatherData={setRequestedWeatherData}
+          setIsRequestedDataCollected={setIsRequestedDataCollected}
+          setIsLoading={setIsLoading}
+          isLoading={isLoading}
+        />
+      )}
 
-        {!isRequestedDataCollected && userLocationWeatherData && !isLoading && (
-          <StartupWeatherDashboard
-            setUserLocationWeatherData={setUserLocationWeatherData}
-            userLocationWeatherData={userLocationWeatherData}
-            weatherIcons={weatherIcons}
-            setRequestedWeatherData={setRequestedWeatherData}
-            setIsRequestedDataCollected={setIsRequestedDataCollected}
-          />
-        )}
-
-        {isRequestedDataCollected && requestedWeatherData && (
-          <WeatherSearchResultsDashboard
-            requestedWeatherData={requestedWeatherData}
-            weatherIcons={weatherIcons}
-            setRequestedWeatherData={setRequestedWeatherData}
-            setIsRequestedDataCollected={setIsRequestedDataCollected}
-            userLocationWeatherData={userLocationWeatherData}
-          />
-        )}
-      </div>
+      {isRequestedDataCollected && requestedWeatherData && (
+        <WeatherSearchResultsDashboard
+          requestedWeatherData={requestedWeatherData}
+          weatherIcons={weatherIcons}
+          setIsSuggestionLoading={setIsSuggestionLoading}
+          isSuggestionLoading={isSuggestionLoading}
+          setRequestedWeatherData={setRequestedWeatherData}
+          setIsRequestedDataCollected={setIsRequestedDataCollected}
+          setIsLoading={setIsLoading}
+          isLoading={isLoading}
+        />
+      )}
     </>
   );
 }
