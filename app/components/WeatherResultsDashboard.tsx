@@ -1,7 +1,7 @@
-"use client";
 import type { WeatherData, WeatherIconsObject } from "../types/weather";
 import Skycons from "react-skycons";
-import WeatherSearchCard from "./WeatherSearchCard";
+import { capitalize } from "../lib/capitalize";
+import HourlyWeatherLineChart from "./HourlyWeatherLineChart";
 
 interface WeatherSearchResultsDashboardProps {
   requestedWeatherData: WeatherData | null;
@@ -9,105 +9,113 @@ interface WeatherSearchResultsDashboardProps {
   setRequestedWeatherData: (data: WeatherData) => void;
   setIsRequestedDataCollected: (data: boolean) => void;
   userLocationWeatherData: WeatherData | null;
-  setLoading: (data: boolean) => void;
 }
 
 export default function WeatherSearchResultsDashboard({
   requestedWeatherData,
   weatherIcons,
-  setRequestedWeatherData,
-  setIsRequestedDataCollected,
-  userLocationWeatherData,
-  setLoading,
 }: WeatherSearchResultsDashboardProps) {
-  if (requestedWeatherData !== null) {
-      return (
-        <div className="bg-gradient-to-t from-sky-500 via-sky-700 to-sky-800 p-3 grid grid-cols-3 gap-1 items-center justify-items-evenly rounded-2xl shadow-2xl text-black w-95/100 m-3 fade-in ">
-          <div className="col-span-3 justify-self-center p-2 ">
-            <WeatherSearchCard
-              setRequestedWeatherData={setRequestedWeatherData}
-              setIsRequestedDataCollected={setIsRequestedDataCollected}
-              userLocationWeatherData={userLocationWeatherData}
-              setLoading={setLoading}
-            />
-          </div>
-          <div className="col-span-3 justify-self-center">
-            <h1 className="text-4xl text-white ">
-              {requestedWeatherData.name}
-            </h1>
-          </div>
-          <div className="col-span-3 justify-self-center pl-[25px] my-2">
-            <h3 className="text-8xl text-white ">
-              {Math.round(requestedWeatherData.main.temp)}°
-            </h3>
-          </div>
-          <div className="col-span-3 justify-self-center m-2 ">
-            <div className="scale-150">
-              <Skycons
-                color={weatherIcons[requestedWeatherData.weather.icon].color}
-                type={weatherIcons[requestedWeatherData.weather.icon].type}
-                animate={true}
-                size={80}
-                resizeClear={true}
-              />
+  if (requestedWeatherData) {
+    return (
+      <div
+        className={`min-h-screen p-2 text-white ${
+          requestedWeatherData.main.current_temp > 90
+            ? "bg-gradient-to-br from-amber-700 to-rose-900"
+            : "bg-gradient-to-br from-blue-500 to-indigo-700"
+        }`}
+      >
+        <div className="mx-auto max-w-4xl space-y-6">
+          <div className="rounded-2xl bg-white/15 p-6 shadow-lg backdrop-blur-md">
+            <div className="flex items-center justify-between gap-6">
+              <div className="text-3xl font-bold items-center ">
+                {requestedWeatherData.name}
+              </div>
+            </div>
+            <div className="flex gap-1">
+              <span>
+                <p>{capitalize(requestedWeatherData.weather.description)}</p>
+              </span>
+              <div className="mx-1 ">
+                <Skycons
+                  color={weatherIcons[requestedWeatherData.weather.icon].color}
+                  type={weatherIcons[requestedWeatherData.weather.icon].type}
+                  animate={true}
+                  size={20}
+                  resizeClear={true}
+                />
+              </div>
+            </div>
+            <div className="mt-2 flex gap-6">
+              <span className="text-6xl font-bold">
+                {Math.round(requestedWeatherData.main.current_temp)}&deg;
+              </span>
+              <div>
+                <p>Humidity: {requestedWeatherData.main.humidityPercent}%</p>
+                <p>
+                  Precipitation:{" "}
+                  {requestedWeatherData.main.percipitationPercent}%
+                </p>
+              </div>
+            </div>
+            <div className="mx-auto mt-4 max-w-4xl ">
+              <div
+                className={`rounded-2xl ${
+                  requestedWeatherData.main.current_temp > 90
+                    ? "bg-gradient-to-br from-amber-700 to-rose-900"
+                    : "bg-gradient-to-br from-blue-500 to-indigo-700"
+                } p-6 shadow-xl text-white`}
+              >
+                <HourlyWeatherLineChart
+                  userLocationWeatherData={requestedWeatherData}
+                />
+              </div>
+            </div>
+            <div className="flex justify-center pt-5 ">
+              <button
+                className={`rounded-lg px-4 py-3 font-bold text-white ${
+                  requestedWeatherData.main.current_temp > 90
+                    ? "bg-red-700 hover:bg-red-900"
+                    : "bg-indigo-700 hover:bg-indigo-800"
+                }`}
+              >
+                Want ideas on what to wear?
+              </button>
             </div>
           </div>
-          <div className="col-span-3 justify-self-center py-1">
-            <h1 className="text-2xl text-white ">
-              {requestedWeatherData.weather.description}
-            </h1>
-          </div>
-          <div className="col-span-3 justify-self-center ">
-            <h1 className="text-xl text-white ">
-              H:{Math.round(requestedWeatherData.main.temp_max)}° L:
-              {Math.round(requestedWeatherData.main.temp_min)}°
-            </h1>
-          </div>
-          <div className="col-span-3">
-            <div className="p-3 grid grid-cols-2 gap-3 items-center justify-items-evenly w-95/100 ">
-              <div className="bg-gradient-to-t from-sky-400 via-sky-500 to-sky-600 m-3 text-3xl p-3 rounded-2xl text-white shadow-2xl w-95/100 h-95/100 ">
-                <h1 className="p-2">Feels like: </h1>
-                <h1 className="p-2">
-                  {Math.round(requestedWeatherData.main.feels_like)}°
-                </h1>
-              </div>
-              <div className="bg-gradient-to-t from-sky-400 via-sky-500 to-sky-600 m-3 text-1xl p-3 rounded-2xl text-white shadow-2xl w-95/100 h-95/100 ">
-                <div className="grid grid-rows-4 grid-cols-2 gap-2 ">
-                  <div className="col-span-1">
-                    <h1 className="p-1">Wind</h1>
+          <div className="mx-auto mt-4 max-w-4xl space-y-6">
+            <div className="rounded-2xl bg-white/15 p-6 shadow-lg backdrop-blur-md">
+              <div className="grid grid-cols-3 gap-4 md:grid-cols-7 place-items-center">
+                {requestedWeatherData.sevenDayForcast.main.map((day) => (
+                  <div
+                    className="rounded-xl bg-white/20 p-4 shadow backdrop-blur-md hover:bg-white/30 max-w-[108px]"
+                    key={day.day}
+                  >
+                    <p className="text-center font-semibold">{day.day}</p>
+                    <div className="item-center m-1 p-1">
+                      {
+                        <Skycons
+                          className=" "
+                          color={weatherIcons[day.icon].color}
+                          type={weatherIcons[day.icon].type}
+                          animate={true}
+                          size={60}
+                          resizeClear={true}
+                        />
+                      }
+                    </div>
+                    <div className="text-center m-1 p-1">
+                      <p className="my-2 inline px-1">{day.tempMax}&deg;</p>
+                      <p className=" my-2 inline px-1 text-white/40 ">
+                        {day.tempMin.toString()}&deg;
+                      </p>
+                    </div>
                   </div>
-                  <div className="col-span-1 justify-self-end ">
-                    <h1 className="p-1">MPH</h1>
-                  </div>
-                  <div className="col-span-1">
-                    <h1 className="p-1 ">Speed </h1>
-                  </div>
-                  <div className="col-span-1 justify-self-end ">
-                    <h1 className="p-1">
-                      {Math.round(requestedWeatherData.wind.speed)}
-                    </h1>
-                  </div>
-                  <div className="col-span-1">
-                    <h1 className="p-1">Gust</h1>
-                  </div>
-                  <div className="col-span-1 justify-self-end ">
-                    <h1 className="p-1">
-                      {Math.round(requestedWeatherData.wind.gust)}
-                    </h1>
-                  </div>
-                  <div className="col-span-1">
-                    <h1 className="p-1">Direction</h1>
-                  </div>
-                  <div className="col-span-1 justify-self-end">
-                    <h1 className="p-1">
-                      East
-                    </h1>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
-      );
-    }
+      </div>
+    );
+  }
 }

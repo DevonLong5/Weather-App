@@ -1,9 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import type { WeatherData } from "./types/weather";
 import { weatherIcons } from "./lib/constants";
 import WeatherSearchResultsDashboard from "./components/WeatherResultsDashboard";
 import StartupWeatherDashboard from "./components/StartupWeatherResultsDashboard";
+import Loading from "./loading";
+import WeatherSearchCard from "./components/WeatherSearchCard";
 
 export default function Home() {
   const [requestedWeatherData, setRequestedWeatherData] =
@@ -12,65 +14,59 @@ export default function Home() {
     useState<Boolean>(false);
   const [userLocationWeatherData, setUserLocationWeatherData] =
     useState<WeatherData | null>(null);
-  const [loading, setLoading] = useState<Boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  useEffect(() => {
+    if (userLocationWeatherData === null) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        let lat = position.coords.latitude;
+        let lon = position.coords.longitude;
+        await fetch(`/api/weather/startup/?lon=${lon}&lat=${lat}`)
+          .then((response) => response.json())
+          .then((data) => setUserLocationWeatherData(data))
+          .catch((error) => console.log(error))
+          .finally(() => {
+            setIsLoading(false);
+            console.log("done");
+          });
+      });
+    }
+  }, []);
 
-  if (!isRequestedDataCollected && !loading) {
-    return (
-      <>
-        <div>
-          <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-t from-sky-500 via-sky-700 to-sky-800 ">
-            <div className="flex flex-col items-center justify-center rounded">
-              {loading ? (
-                <>
-                  <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-t from-sky-500 via-sky-700 to-sky-800">
-                    <img
-                      src="/images/loading.svg"
-                      alt="search"
-                      className="w-40 "
-                    />
-                  </div>
-                </>
-              ) : (
-                <StartupWeatherDashboard
-                  setUserLocationWeatherData={setUserLocationWeatherData}
-                  userLocationWeatherData={userLocationWeatherData}
-                  weatherIcons={weatherIcons}
-                  setRequestedWeatherData={setRequestedWeatherData}
-                  setIsRequestedDataCollected={setIsRequestedDataCollected}
-                  setLoading={setLoading}
-                />
-              )}
-            </div>
-          </div>
+  return (
+    <>
+      <div className="h-screen bg-gradient-to-br from-blue-500 to-indigo-700">
+        <div className="p-2">
+          <WeatherSearchCard
+            setRequestedWeatherData={setRequestedWeatherData}
+            setIsRequestedDataCollected={setIsRequestedDataCollected}
+            userLocationWeatherData={userLocationWeatherData}
+            setIsLoading={setIsLoading}
+            isLoading={isLoading}
+          />
         </div>
-      </>
-    );
-  } else if (isRequestedDataCollected && requestedWeatherData) {
-    return (
-      <>
-        <div>
-          <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-t from-sky-500 via-sky-700 to-sky-800">
-            <div>
-              <WeatherSearchResultsDashboard
-                requestedWeatherData={requestedWeatherData}
-                weatherIcons={weatherIcons}
-                setRequestedWeatherData={setRequestedWeatherData}
-                setIsRequestedDataCollected={setIsRequestedDataCollected}
-                userLocationWeatherData={userLocationWeatherData}
-                setLoading={setLoading}
-              />
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  } else if (loading) {
-    return (
-      <>
-        <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-t from-sky-500 via-sky-700 to-sky-800">
-          <img src="/images/loading.svg" alt="search" className="w-40 " />
-        </div>
-      </>
-    );
-  }
+
+        {isLoading && <Loading />}
+
+        {!isRequestedDataCollected && userLocationWeatherData && !isLoading && (
+          <StartupWeatherDashboard
+            setUserLocationWeatherData={setUserLocationWeatherData}
+            userLocationWeatherData={userLocationWeatherData}
+            weatherIcons={weatherIcons}
+            setRequestedWeatherData={setRequestedWeatherData}
+            setIsRequestedDataCollected={setIsRequestedDataCollected}
+          />
+        )}
+
+        {isRequestedDataCollected && requestedWeatherData && (
+          <WeatherSearchResultsDashboard
+            requestedWeatherData={requestedWeatherData}
+            weatherIcons={weatherIcons}
+            setRequestedWeatherData={setRequestedWeatherData}
+            setIsRequestedDataCollected={setIsRequestedDataCollected}
+            userLocationWeatherData={userLocationWeatherData}
+          />
+        )}
+      </div>
+    </>
+  );
 }

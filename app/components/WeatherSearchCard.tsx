@@ -1,55 +1,54 @@
-"use client";
 import React from "react";
-import axios from "axios";
-import type { WeatherData } from "../types/weather";
+import type { WeatherData } from "@/app/types/weather";
 
 export type WeatherSearchCardProps = {
   setRequestedWeatherData: (data: WeatherData) => void;
   setIsRequestedDataCollected: (data: boolean) => void;
   userLocationWeatherData: WeatherData | null;
-  setLoading: (data: boolean) => void;
+  setIsLoading: (data: boolean) => void;
+  isLoading: boolean;
 };
 
 export default function WeatherSearchCard({
   setRequestedWeatherData,
   setIsRequestedDataCollected,
-  userLocationWeatherData,
-  setLoading
+  setIsLoading,
+  isLoading,
 }: WeatherSearchCardProps) {
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsRequestedDataCollected(true);
+    setIsLoading(true);
+    console.log(isLoading);
     const form = event.currentTarget;
     const formData = new FormData(form);
     const data = formData.get("data");
-    try {
-      const weatherData = await axios.get(`/api/weather/?data=${data}`);
-      setRequestedWeatherData(weatherData.data);
-    } catch (err) {
-      if (err) {
-        console.log(err);
-      }
-    }
+    fetch(`/api/weather/?data=${data}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setRequestedWeatherData(data);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setIsLoading(false);
+        setIsRequestedDataCollected(true);
+      });
   };
-
-  if (userLocationWeatherData !== null) {
-    return (
-      // <div className="flex items-center justify-center bg-gradient-to-t from-sky-500 via-sky-700 to-sky-800 w-90 py-2 max-w-lg rounded-2xl shadow-md fade-in ">
-        <form
-          onSubmit={handleSubmit}
-          className="flex items-center border-gray-300 rounded-2xl w-80 p-2 bg-white "
-        >
-          <input
-            type="text"
-            name="data"
-            placeholder="Search your City or Zipcode"
-            className="text-black text-lg focus:outline-none flex-1 "
-          ></input>
-          <button type="submit">
-            <img src="/images/search.svg" alt="search" className="w-6 h-6 " />
-          </button>
-        </form>
-      // </div>
-    );
-  }
+  return (
+    <div className="flex items-center justify-center fade-in ">
+      <form
+        onSubmit={handleSubmit}
+        className="flex items-center rounded-2xl w-85 p-2 bg-white shadow-xl "
+      >
+        <input
+          type="text"
+          name="data"
+          placeholder="Search your City or Zipcode"
+          className="text-black text-lg focus:outline-none flex-1 "
+        ></input>
+        <button type="submit">
+          <img src="/images/search.svg" alt="search" className="w-6 h-6 " />
+        </button>
+      </form>
+    </div>
+  );
 }

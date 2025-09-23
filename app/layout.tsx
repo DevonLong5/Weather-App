@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Istok_Web } from 'next/font/google';
+import { Istok_Web } from "next/font/google";
 
 export const metadata: Metadata = {
   title: "Weather App",
@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 };
 
 const istokWeb = Istok_Web({
-  weight: '400',
-  subsets: ['latin'],
-})
+  weight: "400",
+  subsets: ["latin"],
+});
 
 export default function RootLayout({
   children,
@@ -19,9 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={istokWeb.className}>
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
