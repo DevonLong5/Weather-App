@@ -40,6 +40,7 @@ export default function WeatherSearchResultsDashboard({
         .then((response) => response.json())
         .then((data) => {
           setAIResponse(data);
+          console.log(data);
         })
         .catch((error) => console.log(error))
         .finally(() => setIsSuggestionLoading(false));
@@ -116,11 +117,11 @@ export default function WeatherSearchResultsDashboard({
                 </div>
               </div>
               {suggestionHasBeenClicked ? (
-                <pre>
-                  <div className="text-white p-6 m-2 text-center text-l sm:text-xs text-ellipsis md:text-clip">
-                    <p>{AIResponse}</p>
-                  </div>
-                </pre>
+                <div className="max-w-md mx-auto p-4 text-center ">
+                  <p className="break-words text-white text-sm md:text-base">
+                    {AIResponse}
+                  </p>
+                </div>
               ) : null}
               {!suggestionHasBeenClicked && (
                 <div className="flex justify-center pt-5 ">
