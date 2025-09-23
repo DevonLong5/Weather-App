@@ -19,6 +19,5 @@ export async function GET(req: NextRequest) {
       "Recommend clothing for the current weather. Do not ask the user questions. Write under 100 words. Include the city, temperature, and description. Format in short lines (max 25 words).",
     input: `The current temperature is ${currentTemp} farenheit in ${city} and the weather description is ${weatherDescription} and it feels like ${feelsLikeTemp} farenheit`,
   });
-  console.log(response.output_text);
   return NextResponse.json(response.output_text);
 }

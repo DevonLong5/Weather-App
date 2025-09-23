@@ -27,7 +27,6 @@ export default function Home() {
           .catch((error) => console.log(error))
           .finally(() => {
             setIsLoading(false);
-            console.log("done");
           });
       });
     }

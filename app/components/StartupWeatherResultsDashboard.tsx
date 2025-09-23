@@ -45,7 +45,6 @@ export default function StartupWeatherDashboard({
         .catch((error) => console.log(error))
         .finally(() => setIsSuggestionLoading(false));
     };
-    console.log(AIResponse);
     if (userLocationWeatherData !== null) {
       return (
         <div

@@ -44,7 +44,6 @@ export default function WeatherSearchResultsDashboard({
         .catch((error) => console.log(error))
         .finally(() => setIsSuggestionLoading(false));
     };
-    console.log(AIResponse);
     if (requestedWeatherData !== null) {
       return (
         <div

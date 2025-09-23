@@ -23,7 +23,6 @@ export default function WeatherSearchCard({
     setSuggestionHasBeenClicked(false);
     setAIResponse("");
     setIsLoading(true);
-    console.log(isLoading);
     const form = event.currentTarget;
     const formData = new FormData(form);
     const data = formData.get("data");
