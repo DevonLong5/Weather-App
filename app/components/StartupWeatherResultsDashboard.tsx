@@ -3,7 +3,7 @@ import type { WeatherIconsObject } from "../types/weather";
 import Skycons from "react-skycons";
 import { capitalize } from "../lib/capitalize";
 import HourlyWeatherLineChart from "./HourlyWeatherLineChart";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WeatherSearchCard, { WeatherSearchCardProps } from "./WeatherSearchCard";
 import { convertUnitToC } from "../lib/convertUnit";
 
@@ -41,6 +41,21 @@ export default function StartupWeatherDashboard({
   ) => {
     -setIsCelciusChecked(event.target.checked);
   };
+  if (userLocationWeatherData !== null) {
+    useEffect(() => {
+      if (userLocationWeatherData.main.current_temp > 90) {
+        document.documentElement.style.setProperty(
+          "--theme-bg",
+          "205, 132, 169"
+        );
+      } else {
+        document.documentElement.style.setProperty(
+          "--theme-bg",
+          "43, 127, 255"
+        );
+      }
+    }, [userLocationWeatherData.main.current_temp]);
+  }
   if (userLocationWeatherData) {
     const getSuggestion = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
