@@ -58,7 +58,7 @@ export default function WeatherSearchResultsDashboard({
     if (requestedWeatherData !== null) {
       return (
         <div
-          className={`min-h-screen p-2 text-white ${
+          className={`min-h-dvh min-w-dvw p-2 text-white ${
             requestedWeatherData.main.current_temp > 90
               ? "bg-gradient-to-br from-amber-700 to-rose-900"
               : "bg-gradient-to-br from-blue-500 to-indigo-700"
