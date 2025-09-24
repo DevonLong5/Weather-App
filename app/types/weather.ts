@@ -8,8 +8,11 @@ export interface WeatherData {
     percipitationPercent: number;
     humidityPercent: number;
   };
-  tempChartYAxis: Array<number>;
-  timeChartXAxis: Array<string>;
+  hourlyTemp: {
+    tempChartYAxis: Array<number>;
+    timeChartXAxis: Array<string>;
+    timeZoneShift: number;
+  };
   sevenDayForcast: sevenDayForcast;
   weather: {
     icon: string;
@@ -28,17 +31,20 @@ export interface WeatherDataAPIRequest {
   main: {
     dt: number;
     temp: number;
+    timezone: number;
   };
   weather: Array<{ icon: string }>;
 }
 interface sevenDayForcast {
-  main: [{
-    id: number;
-    day: string;
-    icon: string;
-    tempMax: number;
-    tempMin: number;
-  }];
+  main: [
+    {
+      id: number;
+      day: string;
+      icon: string;
+      tempMax: number;
+      tempMin: number;
+    }
+  ];
 }
 
 export interface WeatherIconsObject {

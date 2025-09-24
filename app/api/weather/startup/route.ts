@@ -3,9 +3,9 @@ import axios from "axios";
 import type { WeatherData, WeatherDataAPIRequest } from "@/app/types/weather";
 import { convertUnix, convertUnixToDayOfWeek } from "@/app/lib/convertUnix";
 
-
 export async function GET(req: NextRequest) {
   const apiKey = process.env.API_KEY;
+  const timeZoneApiKey = process.env.TIMEZONE_API_KEY;
   let longitude: string | null = req.nextUrl.searchParams.get("lon");
   let latitude: string | null = req.nextUrl.searchParams.get("lat");
   let WeatherData: WeatherData = {
@@ -18,8 +18,11 @@ export async function GET(req: NextRequest) {
       percipitationPercent: 0,
       humidityPercent: 0,
     },
-    tempChartYAxis: [],
-    timeChartXAxis: [],
+    hourlyTemp: {
+      tempChartYAxis: [],
+      timeChartXAxis: [],
+      timeZoneShift: 0,
+    },
     sevenDayForcast: {
       main: [
         {
@@ -67,6 +70,20 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  // Find Timezone
+  try {
+    const response = await axios.get(
+      `http://api.timezonedb.com/v2.1/get-time-zone?key=${timeZoneApiKey}&format=json&by=position&lat=${latitude}&lng=${longitude}`
+    );
+    WeatherData.hourlyTemp.timeZoneShift = response.data.gmtOffset;
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json(
+      { error: "Please limit requests to 1 per second" },
+      { status: 500 }
+    );
+  }
+
   //Current weather data
   try {
     const weather = await axios.get(
@@ -94,11 +111,14 @@ export async function GET(req: NextRequest) {
     const weather = await axios.get(
       `https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=imperial&cnt=24`
     );
+    weather.data.list.map((element: WeatherDataAPIRequest) => {
+      WeatherData.hourlyTemp.timeChartXAxis.push(
+        convertUnix(element.dt, WeatherData.hourlyTemp.timeZoneShift)
+      );
+      WeatherData.hourlyTemp.tempChartYAxis.push(Math.round(element.main.temp));
+    });
     weather.data.list.map((element: WeatherDataAPIRequest) =>
-      WeatherData.timeChartXAxis.push(convertUnix(element.dt))
-    );
-    weather.data.list.map((element: WeatherDataAPIRequest) =>
-      WeatherData.tempChartYAxis.push(Math.round(element.main.temp))
+      WeatherData.hourlyTemp.tempChartYAxis.push(Math.round(element.main.temp))
     );
     WeatherData.main.humidityPercent = weather.data.list[0].main.humidity;
     WeatherData.main.percipitationPercent = weather.data.list[0].pop * 100;

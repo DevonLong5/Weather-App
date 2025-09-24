@@ -1,13 +1,14 @@
-export function convertUnix(unixTimestamp: number) {
-  var date = new Date(unixTimestamp * 1000);
-  var hours = date.getHours();
+
+export function convertUnix(unixTimestamp: number, timeZoneShift: number) {
+  var date = new Date((unixTimestamp + timeZoneShift) * 1000);
+  var hours = date.getUTCHours()
   var formattedTime: string;
   hours == 0
     ? (formattedTime = "12am")
     : hours > 12
     ? (formattedTime = hours - 12 + "pm")
     : (formattedTime = hours + "am");
-  hours == 12 ? (formattedTime = hours + "pm") : null;
+  hours == 12 ? (formattedTime = hours + "pm") : "N/A";
   return formattedTime;
 }
 

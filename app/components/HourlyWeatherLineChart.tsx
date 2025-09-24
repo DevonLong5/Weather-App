@@ -29,11 +29,11 @@ export default function HourlyWeatherLineChart({
 }: LineChartProps) {
   if (userLocationWeatherData) {
     const data = {
-      labels: userLocationWeatherData.timeChartXAxis.map((element) => element),
+      labels: userLocationWeatherData.hourlyTemp.timeChartXAxis.map((element) => element),
       datasets: [
         {
           borderColor: "white",
-          data: userLocationWeatherData.tempChartYAxis.map(
+          data: userLocationWeatherData.hourlyTemp.tempChartYAxis.map(
             (element) => element
           ),
           borderWidth: 1,
