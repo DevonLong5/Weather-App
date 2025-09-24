@@ -5,6 +5,7 @@ import { capitalize } from "../lib/capitalize";
 import HourlyWeatherLineChart from "./HourlyWeatherLineChart";
 import { useState } from "react";
 import WeatherSearchCard, { WeatherSearchCardProps } from "./WeatherSearchCard";
+import { convertUnitToC } from "../lib/convertUnit";
 
 interface StartupWeatherDashboardProps {
   userLocationWeatherData: WeatherData | null;
@@ -15,6 +16,8 @@ interface StartupWeatherDashboardProps {
   setIsRequestedDataCollected: (data: boolean) => void;
   setIsLoading: (data: boolean) => void;
   isLoading: boolean;
+  isCelciusChecked: boolean;
+  setIsCelciusChecked: (data: boolean) => void;
 }
 
 export default function StartupWeatherDashboard({
@@ -26,17 +29,25 @@ export default function StartupWeatherDashboard({
   isLoading,
   setRequestedWeatherData,
   setIsRequestedDataCollected,
+  isCelciusChecked,
+  setIsCelciusChecked,
 }: StartupWeatherDashboardProps) {
   const [AIResponse, setAIResponse] = useState<string>("");
   const [suggestionHasBeenClicked, setSuggestionHasBeenClicked] =
     useState<boolean>(false);
+
+  const handleCelciusCheckbox = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    -setIsCelciusChecked(event.target.checked);
+  };
   if (userLocationWeatherData) {
     const getSuggestion = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       setIsSuggestionLoading(true);
       setSuggestionHasBeenClicked(true);
       fetch(
-        `/api/weather/suggestion/?city=${userLocationWeatherData.name}&temp=${userLocationWeatherData.main.current_temp}&description=${userLocationWeatherData.weather.description}&feelstemp=${userLocationWeatherData.main.feelsLike}`
+        `/api/weather/suggestion/?city=${userLocationWeatherData.name}&temp=${userLocationWeatherData.main.current_temp}&description=${userLocationWeatherData.weather.description}&feelstemp=${userLocationWeatherData.main.feelsLike}&time=${userLocationWeatherData.hourlyTemp.timeChartXAxis[0]}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -71,6 +82,19 @@ export default function StartupWeatherDashboard({
                 <div className="text-3xl font-bold items-center ">
                   {userLocationWeatherData.name}
                 </div>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    value=""
+                    className="sr-only peer"
+                    checked={isCelciusChecked}
+                    onChange={handleCelciusCheckbox}
+                  />
+                  <div className="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                  <span className="ms-1 text-lg font-medium text-white dark:text-white">
+                    &deg;C
+                  </span>
+                </label>
               </div>
               <div className="flex gap-1">
                 <span>
@@ -94,7 +118,10 @@ export default function StartupWeatherDashboard({
               </div>
               <div className="mt-2 flex gap-6">
                 <span className="text-6xl font-bold">
-                  {Math.round(userLocationWeatherData.main.current_temp)}&deg;
+                  {isCelciusChecked
+                    ? convertUnitToC(userLocationWeatherData.main.current_temp)
+                    : Math.round(userLocationWeatherData.main.current_temp)}
+                  &deg;
                 </span>
                 <div>
                   <p>
@@ -120,6 +147,7 @@ export default function StartupWeatherDashboard({
                 >
                   <HourlyWeatherLineChart
                     userLocationWeatherData={userLocationWeatherData}
+                    isCelciusChecked={isCelciusChecked}
                   />
                 </div>
               </div>
@@ -176,9 +204,17 @@ export default function StartupWeatherDashboard({
                         }
                       </div>
                       <div className="text-center m-1 p-1">
-                        <p className="my-2 inline px-1">{day.tempMax}&deg;</p>
+                        <p className="my-2 inline px-1">
+                          {isCelciusChecked
+                            ? convertUnitToC(day.tempMax)
+                            : day.tempMax}
+                          &deg;
+                        </p>
                         <p className=" my-2 inline px-1 text-white/40 ">
-                          {day.tempMin.toString()}&deg;
+                          {isCelciusChecked
+                            ? convertUnitToC(day.tempMin)
+                            : day.tempMin}
+                          &deg;
                         </p>
                       </div>
                     </div>

@@ -9,6 +9,7 @@ export async function GET(req: NextRequest) {
   const data: string | null = req.nextUrl.searchParams.get("data");
   let longitude: number | undefined;
   let latitude: number | undefined;
+  let unit: string;
   let WeatherData: WeatherData = {
     name: "string",
     main: {
@@ -44,6 +45,7 @@ export async function GET(req: NextRequest) {
       gust: 0,
       speed: 0,
     },
+
   };
 
   if (!data) {

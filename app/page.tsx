@@ -13,9 +13,10 @@ export default function Home() {
     useState<Boolean>(false);
   const [userLocationWeatherData, setUserLocationWeatherData] =
     useState<WeatherData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSuggestionLoading, setIsSuggestionLoading] =
     useState<boolean>(false);
+  const [isCelciusChecked, setIsCelciusChecked] = useState<boolean>(false);
   useEffect(() => {
     if (userLocationWeatherData === null) {
       navigator.geolocation.getCurrentPosition(async (position) => {
@@ -35,7 +36,6 @@ export default function Home() {
   return (
     <>
       {isLoading && <Loading />}
-
       {!isRequestedDataCollected && userLocationWeatherData && !isLoading && (
         <StartupWeatherDashboard
           userLocationWeatherData={userLocationWeatherData}
@@ -46,6 +46,8 @@ export default function Home() {
           setIsRequestedDataCollected={setIsRequestedDataCollected}
           setIsLoading={setIsLoading}
           isLoading={isLoading}
+          isCelciusChecked={isCelciusChecked}
+          setIsCelciusChecked={setIsCelciusChecked}
         />
       )}
 
@@ -59,6 +61,8 @@ export default function Home() {
           setIsRequestedDataCollected={setIsRequestedDataCollected}
           setIsLoading={setIsLoading}
           isLoading={isLoading}
+          isCelciusChecked={isCelciusChecked}
+          setIsCelciusChecked={setIsCelciusChecked}
         />
       )}
     </>

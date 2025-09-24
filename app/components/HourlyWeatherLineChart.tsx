@@ -10,6 +10,7 @@ import {
 } from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 import type { WeatherData } from "../types/weather";
+import { convertUnitToC } from "../lib/convertUnit";
 
 ChartJS.register(
   CategoryScale,
@@ -22,20 +23,28 @@ ChartJS.register(
 
 interface LineChartProps {
   userLocationWeatherData: WeatherData | null;
+  isCelciusChecked: boolean;
 }
 
 export default function HourlyWeatherLineChart({
   userLocationWeatherData,
+  isCelciusChecked,
 }: LineChartProps) {
   if (userLocationWeatherData) {
     const data = {
-      labels: userLocationWeatherData.hourlyTemp.timeChartXAxis.map((element) => element),
+      labels: userLocationWeatherData.hourlyTemp.timeChartXAxis.map(
+        (element) => element
+      ),
       datasets: [
         {
           borderColor: "white",
-          data: userLocationWeatherData.hourlyTemp.tempChartYAxis.map(
-            (element) => element
-          ),
+          data: isCelciusChecked
+            ? userLocationWeatherData.hourlyTemp.tempChartYAxis.map((element) =>
+                convertUnitToC(element)
+              )
+            : userLocationWeatherData.hourlyTemp.tempChartYAxis.map(
+                (element) => element
+              ),
           borderWidth: 1,
           fill: true,
           backgroundColor: (context: any) => {
