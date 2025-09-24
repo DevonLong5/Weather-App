@@ -41,8 +41,8 @@ export default function StartupWeatherDashboard({
   ) => {
     -setIsCelciusChecked(event.target.checked);
   };
-  if (userLocationWeatherData !== null) {
-    useEffect(() => {
+  useEffect(() => {
+    if (userLocationWeatherData !== null) {
       if (userLocationWeatherData.main.current_temp > 90) {
         document.documentElement.style.setProperty(
           "--theme-bg",
@@ -54,8 +54,8 @@ export default function StartupWeatherDashboard({
           "43, 127, 255"
         );
       }
-    }, [userLocationWeatherData.main.current_temp]);
-  }
+    }
+  }, [userLocationWeatherData?.main.current_temp]);
   if (userLocationWeatherData) {
     const getSuggestion = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();

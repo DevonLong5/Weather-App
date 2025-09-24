@@ -31,8 +31,8 @@ export default function WeatherSearchResultsDashboard({
   isCelciusChecked,
   setIsCelciusChecked,
 }: WeatherSearchResultsDashboardProps) {
-  if (requestedWeatherData !== null) {
-    useEffect(() => {
+  useEffect(() => {
+    if (requestedWeatherData !== null) {
       if (requestedWeatherData.main.current_temp > 90) {
         document.documentElement.style.setProperty(
           "--theme-bg",
@@ -44,8 +44,8 @@ export default function WeatherSearchResultsDashboard({
           "43, 127, 255"
         );
       }
-    }, [requestedWeatherData.main.current_temp]);
-  }
+    }
+  }, [requestedWeatherData?.main.current_temp]);
   const [AIResponse, setAIResponse] = useState<string>("");
   const [suggestionHasBeenClicked, setSuggestionHasBeenClicked] =
     useState<boolean>(false);
