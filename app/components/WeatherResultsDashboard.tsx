@@ -37,9 +37,9 @@ export default function WeatherSearchResultsDashboard({
     useEffect(() => {
       if (requestedWeatherData !== null) {
         if (requestedWeatherData.main.current_temp > 90) {
-          setTheme("dark");
+          setTheme("light");
         } else {
-          requestedWeatherData.main.current_temp;
+          setTheme("dark");
         }
       }
     }, [requestedWeatherData?.main.current_temp]);

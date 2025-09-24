@@ -17,9 +17,13 @@
     --background: rgb(43, 127, 255);
     --foreground: rgb(43, 127, 255);
   }
-  [data-theme="dark"] {
+  [data-theme="blue"] {
     --background: rgb(193, 0, 7);
     --foreground: rgb(193, 0, 7);
+  }
+  [data-theme="dark"] {
+    --background: rgb(43, 127, 255);
+    --foreground: rgb(43, 127, 255);
   }
 }
 

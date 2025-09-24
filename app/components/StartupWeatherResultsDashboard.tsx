@@ -41,9 +41,9 @@ export default function StartupWeatherDashboard({
     useEffect(() => {
       if (userLocationWeatherData !== null) {
         if (userLocationWeatherData.main.current_temp > 90) {
-          setTheme("dark");
+          setTheme("light");
         } else {
-          userLocationWeatherData.main.current_temp;
+          setTheme("dark");
         }
       }
     }, [userLocationWeatherData?.main.current_temp]);
