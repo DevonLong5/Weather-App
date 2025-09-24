@@ -1,10 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Istok_Web } from "next/font/google";
 
 export const metadata: Metadata = {
   title: "Weather App",
   description: "Find out the weather near you",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 const istokWeb = Istok_Web({
