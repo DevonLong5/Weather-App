@@ -6,6 +6,7 @@ import HourlyWeatherLineChart from "./HourlyWeatherLineChart";
 import { useState, useEffect } from "react";
 import WeatherSearchCard, { WeatherSearchCardProps } from "./WeatherSearchCard";
 import { convertUnitToC } from "../lib/convertUnit";
+import { useTheme } from "next-themes";
 
 interface StartupWeatherDashboardProps {
   userLocationWeatherData: WeatherData | null;
@@ -35,27 +36,24 @@ export default function StartupWeatherDashboard({
   const [AIResponse, setAIResponse] = useState<string>("");
   const [suggestionHasBeenClicked, setSuggestionHasBeenClicked] =
     useState<boolean>(false);
+  const ThemeChanger = () => {
+    const { theme, setTheme } = useTheme();
+    useEffect(() => {
+      if (userLocationWeatherData !== null) {
+        if (userLocationWeatherData.main.current_temp > 90) {
+          setTheme("dark");
+        } else {
+          userLocationWeatherData.main.current_temp;
+        }
+      }
+    }, [userLocationWeatherData?.main.current_temp]);
+  };
 
   const handleCelciusCheckbox = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    -setIsCelciusChecked(event.target.checked);
+    setIsCelciusChecked(event.target.checked);
   };
-  useEffect(() => {
-    if (userLocationWeatherData !== null) {
-      if (userLocationWeatherData.main.current_temp > 90) {
-        document.documentElement.style.setProperty(
-          "--theme-bg",
-          "205, 132, 169"
-        );
-      } else {
-        document.documentElement.style.setProperty(
-          "--theme-bg",
-          "43, 127, 255"
-        );
-      }
-    }
-  }, [userLocationWeatherData?.main.current_temp]);
   if (userLocationWeatherData) {
     const getSuggestion = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();

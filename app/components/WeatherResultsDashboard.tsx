@@ -5,6 +5,7 @@ import HourlyWeatherLineChart from "./HourlyWeatherLineChart";
 import { useState, useEffect } from "react";
 import WeatherSearchCard from "./WeatherSearchCard";
 import { convertUnitToC } from "../lib/convertUnit";
+import { useTheme } from "next-themes";
 
 interface WeatherSearchResultsDashboardProps {
   requestedWeatherData: WeatherData | null;
@@ -31,21 +32,18 @@ export default function WeatherSearchResultsDashboard({
   isCelciusChecked,
   setIsCelciusChecked,
 }: WeatherSearchResultsDashboardProps) {
-  useEffect(() => {
-    if (requestedWeatherData !== null) {
-      if (requestedWeatherData.main.current_temp > 90) {
-        document.documentElement.style.setProperty(
-          "--theme-bg",
-          "205, 132, 169"
-        );
-      } else {
-        document.documentElement.style.setProperty(
-          "--theme-bg",
-          "43, 127, 255"
-        );
+  const ThemeChanger = () => {
+    const { theme, setTheme } = useTheme();
+    useEffect(() => {
+      if (requestedWeatherData !== null) {
+        if (requestedWeatherData.main.current_temp > 90) {
+          setTheme("dark");
+        } else {
+          requestedWeatherData.main.current_temp;
+        }
       }
-    }
-  }, [requestedWeatherData?.main.current_temp]);
+    }, [requestedWeatherData?.main.current_temp]);
+  };
   const [AIResponse, setAIResponse] = useState<string>("");
   const [suggestionHasBeenClicked, setSuggestionHasBeenClicked] =
     useState<boolean>(false);

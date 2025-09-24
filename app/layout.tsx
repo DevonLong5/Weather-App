@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Istok_Web } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "Weather App",
@@ -23,8 +24,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={istokWeb.className}>
-      <body>{children}</body>
+    <html lang="en" className={istokWeb.className} suppressHydrationWarning>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

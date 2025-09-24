@@ -17,8 +17,9 @@
     --background: rgb(43, 127, 255);
     --foreground: rgb(43, 127, 255);
   }
-  .bg-theme {
-    background-color: rgb(var(--theme-bg));
+  [data-theme="dark"] {
+    --background: rgb(193, 0, 7);
+    --foreground: rgb(193, 0, 7);
   }
 }
 
