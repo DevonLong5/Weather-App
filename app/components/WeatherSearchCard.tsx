@@ -49,7 +49,7 @@ export default function WeatherSearchCard({
           placeholder="Search your city or zipcode"
           className="text-black text-lg focus:outline-none flex-1 "
         ></input>
-        <button type="submit">
+        <button type="submit" className="cursor-pointer">
           <img src="/images/search.svg" alt="search" className="w-6 h-6 " />
         </button>
       </form>

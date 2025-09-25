@@ -1,5 +1,5 @@
 export interface WeatherData {
-  name: string;
+  city: string;
   main: {
     current_temp: number;
     tempMin: number;

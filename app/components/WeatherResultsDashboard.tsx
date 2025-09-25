@@ -45,25 +45,18 @@ export default function WeatherSearchResultsDashboard({
       setIsSuggestionLoading(true);
       setSuggestionHasBeenClicked(true);
       fetch(
-        `/api/weather/suggestion/?city=${requestedWeatherData.name}&temp=${requestedWeatherData.main.current_temp}&description=${requestedWeatherData.weather.description}&feelstemp=${requestedWeatherData.main.feelsLike}&time=${requestedWeatherData.hourlyTemp.timeChartXAxis[0]}`
+        `/api/weather/suggestion/?city=${requestedWeatherData.city}&temp=${requestedWeatherData.main.current_temp}&description=${requestedWeatherData.weather.description}&feelstemp=${requestedWeatherData.main.feelsLike}&time=${requestedWeatherData.hourlyTemp.timeChartXAxis[0]}`
       )
         .then((response) => response.json())
         .then((data) => {
           setAIResponse(data);
-          console.log(data);
         })
         .catch((error) => console.log(error))
         .finally(() => setIsSuggestionLoading(false));
     };
     if (requestedWeatherData !== null) {
       return (
-        <div
-          className={`min-h-screen p-2 text-white ${
-            requestedWeatherData.main.current_temp > 90
-              ? "bg-gradient-to-br from-amber-700 to-rose-900"
-              : "bg-gradient-to-br from-blue-500 to-indigo-700"
-          }`}
-        >
+        <div className="bg-gradient-to-br from-blue-500 to-indigo-700 min-h-dvh min-w-dvw">
           <div className="p-2 bg-white/0">
             <WeatherSearchCard
               setRequestedWeatherData={setRequestedWeatherData}
@@ -78,7 +71,7 @@ export default function WeatherSearchResultsDashboard({
             <div className="rounded-2xl bg-white/15 p-6 shadow-lg backdrop-blur-md">
               <div className="flex items-center justify-between gap-6">
                 <div className="text-3xl font-bold items-center ">
-                  {requestedWeatherData.name}
+                  {requestedWeatherData.city}
                 </div>
                 <label className="inline-flex items-center cursor-pointer">
                   <input
@@ -130,13 +123,7 @@ export default function WeatherSearchResultsDashboard({
                 </div>
               </div>
               <div className="mx-auto mt-4 max-w-4xl ">
-                <div
-                  className={`rounded-2xl ${
-                    requestedWeatherData.main.current_temp > 90
-                      ? "bg-gradient-to-br from-amber-700 to-rose-900"
-                      : "bg-gradient-to-br from-blue-500 to-indigo-700"
-                  } p-6 shadow-xl text-white`}
-                >
+                <div className="rounded-2xl  p-5 shadow-2xl text-white bg-gradient-to-br from-blue-500 to-indigo-700 ">
                   <HourlyWeatherLineChart
                     userLocationWeatherData={requestedWeatherData}
                     isCelciusChecked={isCelciusChecked}
@@ -153,11 +140,7 @@ export default function WeatherSearchResultsDashboard({
               {!suggestionHasBeenClicked && (
                 <div className="flex justify-center pt-5 ">
                   <button
-                    className={`rounded-lg px-4 py-3 font-bold text-white ${
-                      requestedWeatherData.main.current_temp > 90
-                        ? "bg-red-700 hover:bg-red-900"
-                        : "bg-indigo-700 hover:bg-indigo-800"
-                    }`}
+                    className="rounded-lg px-4 py-3 font-bold text-white bg-indigo-700 hover:bg-indigo-800 shadow-2xl cursor-pointer"
                     onClick={getSuggestion}
                   >
                     Want ideas on what to wear?

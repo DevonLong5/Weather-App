@@ -42,11 +42,13 @@ export default function HourlyWeatherLineChart({
             ? userLocationWeatherData.hourlyTemp.tempChartYAxis.map((element) =>
                 convertUnitToC(element)
               )
-            : userLocationWeatherData.hourlyTemp.tempChartYAxis.map(
-                (element) => element
+            : userLocationWeatherData.hourlyTemp.tempChartYAxis.map((element) =>
+                Math.round(element)
               ),
           borderWidth: 1,
           fill: true,
+          tension: 0.6,
+          pointRadius: 0.5,
           backgroundColor: (context: any) => {
             const bgColor = ["rgba(255, 0, 0, .4", "rgba(0, 0, 255, .4)"];
             if (!context.chart.chartArea) {
@@ -54,7 +56,6 @@ export default function HourlyWeatherLineChart({
             }
             const {
               ctx,
-              data,
               chartArea: { top, bottom },
             } = context.chart;
             const gradientBg = ctx.createLinearGradient(0, top, 0, bottom);
@@ -67,6 +68,7 @@ export default function HourlyWeatherLineChart({
     };
     const options = {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         title: {
           display: false,
@@ -81,8 +83,15 @@ export default function HourlyWeatherLineChart({
           grid: {
             display: false,
           },
+          gridLines: {
+            display: false,
+          },
           ticks: {
             color: "white",
+            maxTicksLimit: 12,
+            font: {
+              size: 12,
+            },
           },
         },
         y: {
@@ -90,15 +99,25 @@ export default function HourlyWeatherLineChart({
           grid: {
             display: false,
           },
+          gridLines: {
+            display: false,
+          },
           ticks: {
             color: "white",
+            autoSkip: true,
+            maxTicksLimit: 10,
+            font: {
+              size: 12,
+            },
           },
         },
       },
     };
     return (
       <>
-        <Line data={data} options={options} />
+        <div className="w-[100%] h-60 sm:h-100">
+          <Line data={data} options={options} />
+        </div>
       </>
     );
   }

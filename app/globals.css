@@ -14,7 +14,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: rgb(43, 127, 255);
     --foreground: #ededed;
   }
 }
@@ -35,5 +35,5 @@ body {
 }
 
 .fade-in {
-  animation: fadeIn 1s ease-in forwards; /* Adjust duration and timing function as needed */
+  animation: fadeIn 1s ease-in forwards;
 }
